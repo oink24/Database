@@ -243,7 +243,6 @@ SELECT * FROM `Member` AS a, `Department` AS b WHERE a.dep = b.depNo;
 
 SELECT a.`seq`, a.`uid`, `sale`, `name`, `pos` FROM `Sales` AS a 
 		JOIN `Member` AS b ON a.`uid` = b.`uid`;
-		
 SELECT a.`seq`, a.`uid`, `sale`, `name`, `pos` FROM `Sales` AS a
 		JOIN `Member` AS b USING (uid);
 		
@@ -258,11 +257,31 @@ SELECT a.`seq`, a.`uid`, b.`name`, b.`pos`, `year`, SUM(sale) AS `합계`
 		ON a.uid = b.uid
 		GROUP BY a.`uid`, a.`year` HAVING `합계` >= 100000
 		ORDER BY a.`year` ASC, `합계` DESC;
+		
+SELECT * FROM `Sales` AS a
+		JOIN `Member` AS b ON a.uid = b.uid
+		JOIN `Department` AS c ON b.dep = c.depNo;
+SELECT a.`seq`, a.`uid`, a.`sale`, b.`name`, b.`pos`, c.`name`
+		FROM `Sales` AS a
+		JOIN `Member` AS b ON a.uid = b.uid
+		JOIN `Department` AS c ON b.dep = c.depNo;
+SELECT a.`seq`, a.`uid`, a.`sale`, b.`name`, b.`pos`, c.`name`
+		FROM `Sales` AS a
+		JOIN `Member` AS b ON a.uid = b.uid
+		JOIN `Department` AS c ON b.dep = c.depNo
+		WHERE `Sale` > 100000
+		ORDER BY `sale` DESC;
 
 
 #-----실습4-14
+# 외부조인 (LEFT, RIGHT JOIN)
 INSERT INTO `Sales` (`uid`, `year`, `month`, `sale`) VALUES ('p101', '2018', 1, 35000);
 SELECT * FROM `Sales` AS a LEFT JOIN `Member` AS b ON a.uid = b.uid;
+SELECT * FROM `Sales` AS a RIGHT JOIN `Member` AS b ON a.uid = b.uid;
+SELECT a.`seq`, a.`uid`, `sale`, `name`, `pos`, `hp` FROM `Sales` AS a
+		LEFT JOIN `Member` AS b USING(uid);
+SELECT a.`seq`, a.`uid`, `sale`, `name`, `pos`, `hp` FROM `Sales` AS a
+		RIGHT JOIN `Member` AS b USING(uid);
 
 
 #-----실습4-15
@@ -272,11 +291,8 @@ SELECT `uid`, a.`name`, `pos`, b.`name` FROM `Member` AS a JOIN `Department` AS 
 
 #-----실습4-16
 # '김유신' 직원의 2019년도 매출의 합을 조회하시오.
-SELECT SUM(sale) FROM `Member` AS a JOIN `Sales` AS b ON a.uid = b.uid WHERE `year`=2019 AND a.`name` = '김유신'
-	GROUP BY `year`;
-
-SELECT SUM(sale) FROM `Sales` AS a JOIN `Member` AS b ON a.uid = b.uid WHERE `year`=2019 AND `name` = '김유신'
-	GROUP BY `year`;
+SELECT SUM(sale) FROM `Sales` AS a JOIN `Member` AS b ON a.uid = b.uid 
+		WHERE `year`=2019 AND `name` = '김유신';
 
 
 #-----실습4-17
@@ -284,17 +300,19 @@ SELECT SUM(sale) FROM `Sales` AS a JOIN `Member` AS b ON a.uid = b.uid WHERE `ye
 # 직원이름, 부서명, 직급, 년도, 매출 합을 조회하시오.
 # 단, 매출 합이 큰 순서부터 정렬
 SELECT 
-	``,
-	``,
-	``,
-	``,
-	``
-FROM `Sales` AS a
-JOIN `Member` AS b ON a.uid = b.uid
-JOIN `Department` AS c ON b.dep = c.depNo
-WHERE `year `
-GROUP BY
-HAVING
-ORDER BY 
+			b.`name` AS `직원명`, 
+			c.`name` AS `부서명`, 
+			b.`pos` AS `직급`, 
+			a.`year` AS `년도`, 
+			SUM(`sale`) AS `매출합`
+			
+		FROM `Sales` AS a
+		JOIN `Member` AS b ON a.uid = b.uid
+		JOIN `Department` AS c ON b.dep = c.depNo
+		
+		WHERE `year`=2019 AND `sale`>=50000
+		GROUP BY a.`uid`
+		HAVING `매출합` >= 100000
+		ORDER BY `매출합` DESC;
 
 
