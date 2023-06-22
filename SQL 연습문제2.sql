@@ -158,7 +158,10 @@ SELECT * FROM `bank_account` WHERE `a_item_dist` = 'S1' ORDER BY `a_balance` DES
 SELECT * FROM `bank_account` WHERE `a_item_dist` = 'S1'
 		ORDER BY `a_balance` DESC
 		LIMIT 1;
-		
+
+SELECT * FROM `bank_account`
+		WHERE `a_balance` = (SELECT MAX(a_balance) FROM `bank_account` WHERE `a_item_dist` = 'S1');
+
 
 #-----실습2-19
 # 거래내역에서 입금액과 출금액이 각각 큰 순서로 조회하시오.
