@@ -322,7 +322,10 @@ SELECT a.`name`
 		FROM `Customer` AS a
 		LEFT JOIN `Order` AS b
 		ON a.custId = b.custId
-		WHERE `salePrice` IS NULL;
+		WHERE `orderId` IS NULL;
+		
+SELECT `name` FROM `Customer`
+		WHERE `custId` NOT IN(SELECT DISTINCT `custId` FROM `Order`);
 
 
 #-----실습4-44
